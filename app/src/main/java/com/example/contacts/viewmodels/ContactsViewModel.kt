@@ -6,13 +6,14 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.contacts.models.Contact
+import com.example.contacts.models.ContactSection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ContactsViewModel: ViewModel() {
-    private val _contacts = mutableStateListOf<Contact>()
-    val contacts: List<Contact> get() = _contacts
+    private val _sections = mutableStateListOf<ContactSection>()
+    val sections: List<ContactSection> get() = _sections
 
     fun loadContacts(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -42,13 +43,15 @@ class ContactsViewModel: ViewModel() {
                 }
             }
 
+            val grouped = tempContacts
+                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                .groupBy { it.name.first().uppercaseChar() }
+
             withContext(Dispatchers.Main) {
-                _contacts.clear()
-                _contacts.addAll(
-                    tempContacts.sortedWith(
-                        compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
-                    )
-                )
+                _sections.clear()
+                grouped.forEach { (letter, contacts) ->
+                    _sections.add(ContactSection(letter, contacts))
+                }
             }
         }
     }

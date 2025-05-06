@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import com.example.contacts.ui.ContactsScreen
 
 @Composable
-fun ContactsApp(modifier: Modifier = Modifier) {
+fun ContactsApp() {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         ContactsScreen(
             modifier = Modifier.padding(innerPadding)
