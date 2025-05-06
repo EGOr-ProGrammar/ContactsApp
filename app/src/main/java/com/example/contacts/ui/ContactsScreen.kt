@@ -36,11 +36,12 @@ import com.example.contacts.viewmodels.ContactsViewModel
 
 @Composable
 fun ContactsScreen(
-    viewModel: ContactsViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ContactsViewModel = viewModel()
 ) {
     val context = LocalContext.current
 
+    // Save and update launcher for required permissions
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -49,6 +50,7 @@ fun ContactsScreen(
         }
     }
 
+    // Request permissions, if not given
     LaunchedEffect(Unit) {
         val permissions = arrayOf(
             Manifest.permission.READ_CONTACTS,
